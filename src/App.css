@@ -1,38 +1,69 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  padding: 20px;
+}
+
+.upload-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.choose-file-text {
+  font-size: 18px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.original-image {
+  max-width: 100%;
+  margin-top: 10px;
+}
+
+.properties {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.property-slider {
+  width: 80%;
+  margin-bottom: 10px;
+}
+
+.property-slider label {
+  margin-bottom: 5px;
+  font-size: 16px;
+}
+
+.process-button,
+.download-button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #4CAF50;
   color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-.App-link {
-  color: #61dafb;
+.process-button:hover,
+.download-button:hover {
+  background-color: #45a049;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.processed-image {
+  max-width: 100%;
+  margin-top: 20px;
 }
