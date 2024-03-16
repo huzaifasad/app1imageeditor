@@ -13,25 +13,24 @@ const ImageEditor = () => {
 
 useEffect(() => {
   if (image) {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
+    const tempCanvas = document.createElement('canvas');
+    const tempCtx = tempCanvas.getContext('2d');
     const img = new Image();
     img.onload = () => {
-      canvas.width = img.width;
-      canvas.height = img.height;
-      // Save the current context state
-      ctx.save();
-      // Apply filters
-      ctx.filter = `contrast(${contrast}%) brightness(${brightness}%) opacity(${opacity}%)`;
-      // Draw the image with filters applied
-      ctx.drawImage(img, 0, 0);
-      // Reset the context to its original state
-      ctx.restore();
+      tempCanvas.width = img.width;
+      tempCanvas.height = img.height;
+      tempCtx.filter = `contrast(${contrast}%) brightness(${brightness}%) opacity(${opacity}%)`;
+      tempCtx.drawImage(img, 0, 0);
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear previous drawings
+      ctx.drawImage(tempCanvas, 0, 0);
       setPreviewImage(canvas.toDataURL());
     };
     img.src = image;
   }
 }, [image, contrast, brightness, opacity]);
+
 
 
   const handleImageChange = (e) => {
