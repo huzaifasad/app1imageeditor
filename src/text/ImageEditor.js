@@ -10,28 +10,24 @@ const ImageEditor = () => {
   const canvasRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [tool, setTool] = useState('pencil'); // pencil or eraser
+  const [drawings, setDrawings] = useState([]); // Store drawings separately
 
-useEffect(() => {
-  if (image) {
-    const tempCanvas = document.createElement('canvas');
-    const tempCtx = tempCanvas.getContext('2d');
-    const img = new Image();
-    img.onload = () => {
-      tempCanvas.width = img.width;
-      tempCanvas.height = img.height;
-      tempCtx.filter = `contrast(${contrast}%) brightness(${brightness}%) opacity(${opacity}%)`;
-      tempCtx.drawImage(img, 0, 0);
+  useEffect(() => {
+    if (image) {
       const canvas = canvasRef.current;
       const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear previous drawings
-      ctx.drawImage(tempCanvas, 0, 0);
-      setPreviewImage(canvas.toDataURL());
-    };
-    img.src = image;
-  }
-}, [image, contrast, brightness, opacity]);
-
-
+      const img = new Image();
+      img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.filter = `contrast(${contrast}%) brightness(${brightness}%) opacity(${opacity}%)`;
+        ctx.drawImage(img, 0, 0);
+        redrawDrawings(); // Redraw drawings after applying filters
+        setPreviewImage(canvas.toDataURL());
+      };
+      img.src = image;
+    }
+  }, [image, contrast, brightness, opacity]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -91,6 +87,11 @@ useEffect(() => {
 
     ctx.lineTo(x, y);
     ctx.stroke();
+
+    // Store drawings for redrawing after applying filters
+    if (tool === 'pencil') {
+      setDrawings([...drawings, { x, y }]);
+    }
   };
 
   const handleCanvasMouseUp = () => {
@@ -103,6 +104,22 @@ useEffect(() => {
     link.download = 'edited_image.png';
     link.href = canvas.toDataURL();
     link.click();
+  };
+
+  // Function to redraw drawings after applying filters
+  const redrawDrawings = () => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+
+    drawings.forEach(({ x, y }, index) => {
+      if (index === 0) {
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+      } else {
+        ctx.lineTo(x, y);
+        ctx.stroke();
+      }
+    });
   };
 
   return (
