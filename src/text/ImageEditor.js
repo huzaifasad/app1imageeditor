@@ -11,21 +11,28 @@ const ImageEditor = () => {
   const [isDrawing, setIsDrawing] = useState(false);
   const [tool, setTool] = useState('pencil'); // pencil or eraser
 
-  useEffect(() => {
-    if (image) {
-      const canvas = canvasRef.current;
-      const ctx = canvas.getContext('2d');
-      const img = new Image();
-      img.onload = () => {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.filter = `contrast(${contrast}%) brightness(${brightness}%) opacity(${opacity}%)`;
-        ctx.drawImage(img, 0, 0);
-        setPreviewImage(canvas.toDataURL());
-      };
-      img.src = image;
-    }
-  }, [image, contrast, brightness, opacity]);
+useEffect(() => {
+  if (image) {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    img.onload = () => {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      // Save the current context state
+      ctx.save();
+      // Apply filters
+      ctx.filter = `contrast(${contrast}%) brightness(${brightness}%) opacity(${opacity}%)`;
+      // Draw the image with filters applied
+      ctx.drawImage(img, 0, 0);
+      // Reset the context to its original state
+      ctx.restore();
+      setPreviewImage(canvas.toDataURL());
+    };
+    img.src = image;
+  }
+}, [image, contrast, brightness, opacity]);
+
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
